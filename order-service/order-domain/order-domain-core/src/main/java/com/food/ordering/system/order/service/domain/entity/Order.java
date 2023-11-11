@@ -36,11 +36,52 @@ public class Order extends AggregateRoot<OrderId> {
         validateItemsPrice();
     }
 
+    public void pay() {
+        if (orderStatus != OrderStatus.PENDING) {
+            throw new OrderDomainException("Order is not correct state for pay operation");
+
+        }
+        orderStatus = OrderStatus.PAID;
+    }
+
+    public void approve() {
+        if (orderStatus != OrderStatus.PAID) {
+            throw new OrderDomainException("Order is not correct state for approve operation");
+        }
+        orderStatus = OrderStatus.APPROVED;
+    }
+
+    public void initCancel(List<String> faileruyMessages) {
+        if (orderStatus != OrderStatus.PAID) {
+            throw new OrderDomainException("Order is not correct state for initCancel operation");
+        }
+        orderStatus = OrderStatus.CANCELLING;
+        updateFailureMessages(faileruyMessages);
+    }
+
+    private void updateFailureMessages(List<String> faileruyMessages) {
+        if (this.faileruyMessages != null && faileruyMessages != null) {
+            this.faileruyMessages.addAll(faileruyMessages.stream().filter(message -> !message.isEmpty()).toList());
+        }
+        if (this.faileruyMessages == null) {
+            this.faileruyMessages = faileruyMessages;
+        }
+
+    }
+
+    public void cancel(List<String> faileruyMessages) {
+        if (!(orderStatus == OrderStatus.CANCELLING || orderStatus == OrderStatus.PENDING)) {
+            throw new OrderDomainException("Order is not correct state for cancel operation");
+        }
+        orderStatus = OrderStatus.CANCELLED;
+        updateFailureMessages(faileruyMessages);
+    }
+
     private void validateItemsPrice() {
         Money orderItemsTotal = items.stream().map(orderItem -> {
-        validateItemPrice(orderItem);
-        return orderItem.getSubTotal();
-    }).reduce(Money.ZERO, Money::add);
+            validateItemPrice(orderItem);
+            return orderItem.getSubTotal();
+        }).reduce(Money.ZERO, Money::add);
 
         if (!price.equals(orderItemsTotal)) {
             throw new OrderDomainException("Total price:" + price.getAmount() + " is not qual to Order items total:" + orderItemsTotal.getAmount());
@@ -50,7 +91,7 @@ public class Order extends AggregateRoot<OrderId> {
     private void validateItemPrice(OrderItem orderItem) {
         if (!orderItem.isPriceValid()) {
             throw new OrderDomainException("Order item price:" + orderItem.getPrice().getAmount() +
-                    "is not valid for product "+ orderItem.getProduct().getId().getValue());
+                    "is not valid for product " + orderItem.getProduct().getId().getValue());
         }
 
     }
@@ -69,11 +110,10 @@ public class Order extends AggregateRoot<OrderId> {
 
     private void initializeOrderItems() {
         long itemId = 1;
-        for(OrderItem orderItem: items) {
+        for (OrderItem orderItem : items) {
             orderItem.initializeOrderItem(super.getId(), new OrderItemId(itemId++));
         }
     }
-
 
 
     private Order(Builder builder) {
