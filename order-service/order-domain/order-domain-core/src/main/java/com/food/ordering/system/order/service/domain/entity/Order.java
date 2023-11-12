@@ -156,7 +156,7 @@ public class Order extends AggregateRoot<OrderId> {
         return orderStatus;
     }
 
-    public List<String> getFaileruyMessages() {
+    public List<String> getFailureMessages() {
         return faileruyMessages;
     }
 
