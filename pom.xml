@@ -3,6 +3,7 @@
     <modules>
         <module>order-service</module>
         <module>common</module>
+        <module>infrastructure</module>
     </modules>
     <parent>
         <artifactId>spring-boot-starter-parent</artifactId>
