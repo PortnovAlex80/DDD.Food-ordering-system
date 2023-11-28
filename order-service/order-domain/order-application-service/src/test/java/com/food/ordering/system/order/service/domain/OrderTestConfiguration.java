@@ -5,13 +5,10 @@ import com.food.ordering.system.order.service.domain.ports.output.message.publis
 import com.food.ordering.system.order.service.domain.ports.output.message.publisher.restaurantapproval.OrderPaidRestaurantRequestMessagePublisher;
 import com.food.ordering.system.order.service.domain.ports.output.repository.CustomerRepository;
 import com.food.ordering.system.order.service.domain.ports.output.repository.OrderRepository;
-import com.food.ordering.system.order.service.domain.ports.output.repository.RestorantRepository;
+import com.food.ordering.system.order.service.domain.ports.output.repository.RestaurantRepository;
 import org.mockito.Mockito;
-import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-
-import javax.validation.constraints.Negative;
 
 @SpringBootApplication(scanBasePackages = "com.food.ordering.system")
 public class OrderTestConfiguration {
@@ -41,8 +38,8 @@ public class OrderTestConfiguration {
     }
 
     @Bean
-    public RestorantRepository restorantRepository() {
-        return Mockito.mock(RestorantRepository.class);
+    public RestaurantRepository restorantRepository() {
+        return Mockito.mock(RestaurantRepository.class);
     }
 
     @Bean

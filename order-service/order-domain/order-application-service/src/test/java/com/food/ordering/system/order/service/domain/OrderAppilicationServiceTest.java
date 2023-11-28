@@ -14,7 +14,7 @@ import com.food.ordering.system.order.service.domain.mapper.OrderDataMapper;
 import com.food.ordering.system.order.service.domain.ports.input.service.OrderApplicationService;
 import com.food.ordering.system.order.service.domain.ports.output.repository.CustomerRepository;
 import com.food.ordering.system.order.service.domain.ports.output.repository.OrderRepository;
-import com.food.ordering.system.order.service.domain.ports.output.repository.RestorantRepository;
+import com.food.ordering.system.order.service.domain.ports.output.repository.RestaurantRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -42,7 +42,7 @@ public class OrderAppilicationServiceTest {
     @Autowired
     private CustomerRepository customerRepository;
     @Autowired
-    private RestorantRepository restorantRepository;
+    private RestaurantRepository restaurantRepository;
 
     private CreateOrderCommand createOrderCommand;
     private CreateOrderCommand createOrderCommandWrongPrice;
@@ -131,7 +131,7 @@ public class OrderAppilicationServiceTest {
         Customer customer = new Customer();
         customer.setId(new CustomerId((CUSTOMER_ID)));
 
-        Restaurant restaurantResponse = Restaurant.Builder.builder()
+        Restaurant restaurantResponse = Restaurant.builder()
                 .restaurantId(new RestaurantId(createOrderCommand.getRestaurantId()))
                 .products(List.of(new Product(new ProductId(PRODUCT_ID), "product 1", new Money(new BigDecimal("50.00"))), new Product(new ProductId(PRODUCT_ID), "product 2", new Money(new BigDecimal("50.00")))))
                 .active(true)
@@ -141,7 +141,7 @@ public class OrderAppilicationServiceTest {
         order.setId(new OrderId(ORDER_ID));
 
         when(customerRepository.findCustomer(CUSTOMER_ID)).thenReturn(Optional.of(customer));
-        when(restorantRepository.findRestaurantInforamtion(orderDataMapper.createOrderCommandToRestaurant(createOrderCommand))).thenReturn(Optional.of(restaurantResponse));
+        when(restaurantRepository.findRestaurantInformation(orderDataMapper.createOrderCommandToRestaurant(createOrderCommand))).thenReturn(Optional.of(restaurantResponse));
         when(orderRepository.save(any(Order.class))).thenReturn(order);
     }
 

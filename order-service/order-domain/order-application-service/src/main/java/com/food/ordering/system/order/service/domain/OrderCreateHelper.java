@@ -9,7 +9,7 @@ import com.food.ordering.system.order.service.domain.exception.OrderDomainExcept
 import com.food.ordering.system.order.service.domain.mapper.OrderDataMapper;
 import com.food.ordering.system.order.service.domain.ports.output.repository.CustomerRepository;
 import com.food.ordering.system.order.service.domain.ports.output.repository.OrderRepository;
-import com.food.ordering.system.order.service.domain.ports.output.repository.RestorantRepository;
+import com.food.ordering.system.order.service.domain.ports.output.repository.RestaurantRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,14 +23,14 @@ public class OrderCreateHelper {
     private final OrderDomainService orderDomainService;
     private final OrderRepository orderRepository;
     private final CustomerRepository customerRepository;
-    private final RestorantRepository restorantRepository;
+    private final RestaurantRepository restaurantRepository;
     private final OrderDataMapper orderDataMapper;
 
-    public OrderCreateHelper(OrderDomainService orderDomainService, OrderRepository orderRepository, CustomerRepository customerRepository, RestorantRepository restorantRepository, OrderDataMapper orderDataMapper) {
+    public OrderCreateHelper(OrderDomainService orderDomainService, OrderRepository orderRepository, CustomerRepository customerRepository, RestaurantRepository restaurantRepository, OrderDataMapper orderDataMapper) {
         this.orderDomainService = orderDomainService;
         this.orderRepository = orderRepository;
         this.customerRepository = customerRepository;
-        this.restorantRepository = restorantRepository;
+        this.restaurantRepository = restaurantRepository;
         this.orderDataMapper = orderDataMapper;
     }
 
@@ -47,7 +47,7 @@ public class OrderCreateHelper {
 
     private Restaurant checkRestaurant(CreateOrderCommand createOrderCommand) {
         Restaurant restaurant = orderDataMapper.createOrderCommandToRestaurant(createOrderCommand);
-        Optional<Restaurant> optionalRestaurant = restorantRepository.findRestaurantInforamtion(restaurant);
+        Optional<Restaurant> optionalRestaurant = restaurantRepository.findRestaurantInformation(restaurant);
 
         if (optionalRestaurant.isEmpty()) {
             log.warn("Could not find restaurant with restaurant id: {}", createOrderCommand.getRestaurantId());

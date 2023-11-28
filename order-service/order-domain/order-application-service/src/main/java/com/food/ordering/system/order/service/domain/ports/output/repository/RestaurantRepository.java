@@ -4,6 +4,6 @@ import com.food.ordering.system.order.service.domain.entity.Restaurant;
 
 import java.util.Optional;
 
-public interface RestorantRepository {
-    Optional<Restaurant> findRestaurantInforamtion(Restaurant restaurant);
+public interface RestaurantRepository {
+    Optional<Restaurant> findRestaurantInformation(Restaurant restaurant);
 }
